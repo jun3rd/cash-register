@@ -65,14 +65,32 @@ let createCidCopy = (cid) => {
     cidCopy = JSON.parse(JSON.stringify(cid)); // "pure" deep copy of array
 };
 
+let removeHundredFromCidCopy = () => { cidCopy[8][1] -= 100; };
+let addHundredToCustomerChange = () => { runningCustomerChange[8][1] += 100; };
 
-let removeQuarterFromCidCopy = () => {
-    cidCopy[3][1] -= 0.25;
-};
+let removeTwentyFromCidCopy = () => { cidCopy[7][1] -= 20; };
+let addTwentyToCustomerChange = () => { runningCustomerChange[7][1] += 20; };
 
-let addQuarterToCustomerChange = () => {
-    runningCustomerChange[3][1] += 0.25;
-};
+let removeTenFromCidCopy = () => { cidCopy[6][1] -= 10; };
+let addTenToCustomerChange = () => { runningCustomerChange[6][1] += 10; };
+
+let removeFiveFromCidCopy = () => { cidCopy[5][1] -= 5; };
+let addFiveToCustomerChange = () => { runningCustomerChange[5][1] += 5; };
+
+let removeOneFromCidCopy = () => { cidCopy[4][1] -= 1; };
+let addOneToCustomerChange = () => { runningCustomerChange[4][1] += 1; };
+
+let removeQuarterFromCidCopy = () => { cidCopy[3][1] -= 0.25; };
+let addQuarterToCustomerChange = () => { runningCustomerChange[3][1] += 0.25; };
+
+let removeDimeFromCidCopy = () => { cidCopy[2][1] -= 0.10; };
+let addDimeToCustomerChange = () => { runningCustomerChange[2][1] += 0.10; };
+
+let removeNickelFromCidCopy = () => { cidCopy[1][1] -= 0.05; };
+let addNickelToCustomerChange = () => { runningCustomerChange[1][1] += 0.05; };
+
+let removePennyFromCidCopy = () => { cidCopy[0][1] -= 0.01; };
+let addPennyToCustomerChange = () => { runningCustomerChange[0][1] += 0.01; };
 
 let findChangeInCidCopyOf = (refundAmount) => {
     let penny = 0.01,
@@ -87,13 +105,79 @@ let findChangeInCidCopyOf = (refundAmount) => {
     let currentRefundAmount = refundAmount;
 
     while (currentRefundAmount > 0) {
+        if ( (currentRefundAmount >= hundred) ) {
+            removeHundredFromCidCopy();
+            addHundredToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 100;
+            console.log('still owe: ' + currentRefundAmount);
+        }
+        if ( (currentRefundAmount >= twenty) && (currentRefundAmount < hundred) ) {
+            removeTwentyFromCidCopy();
+            addTwentyToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 25;
+            console.log('still owe: ' + currentRefundAmount);
+        }
+        if ( (currentRefundAmount >= ten) && (currentRefundAmount < twenty) ) {
+            removeTenFromCidCopy();
+            addTenToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 10;
+            console.log('still owe: ' + currentRefundAmount);
+        }
+        if ( (currentRefundAmount >= five) && (currentRefundAmount < ten) ) {
+            removeFiveFromCidCopy();
+            addFiveToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 5;
+            console.log('still owe: ' + currentRefundAmount);
+        }
+        if ( (currentRefundAmount >= one) && (currentRefundAmount < five) ) {
+            removeOneFromCidCopy();
+            addOneToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 1;
+            console.log('still owe: ' + currentRefundAmount);
+        }
         if ( (currentRefundAmount >= quarter) && (currentRefundAmount < one) ) {
             removeQuarterFromCidCopy();
             addQuarterToCustomerChange();
             currentRefundAmount = currentRefundAmount - 0.25;
             console.log('still owe: ' + currentRefundAmount);
         }
+        if ( (currentRefundAmount >= dime) && (currentRefundAmount < quarter) ) {
+            removeDimeFromCidCopy();
+            addDimeToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 0.10;
+            console.log('still owe: ' + currentRefundAmount);
+        }
+        if ( (currentRefundAmount >= nickel) && (currentRefundAmount < dime ) ) {
+            removeNickelFromCidCopy();
+            addNickelToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 0.05;
+            console.log('still owe: ' + currentRefundAmount);
+        }
+        if ( (currentRefundAmount >= penny) && (currentRefundAmount < nickel ) ) {
+            removePennyFromCidCopy();
+            addPennyToCustomerChange();
+            currentRefundAmount = currentRefundAmount - 0.01;
+            console.log('still owe: ' + currentRefundAmount);
+        }
     }
+};
+
+let addToCustomerChange = (runningCustomerChange) => {
+    if (runningCustomerChange[8][1] != 0) { customerChange.push(runningCustomerChange[8]); }
+    if (runningCustomerChange[7][1] != 0) { customerChange.push(runningCustomerChange[7]); }
+    if (runningCustomerChange[6][1] != 0) { customerChange.push(runningCustomerChange[6]); }
+    if (runningCustomerChange[5][1] != 0) { customerChange.push(runningCustomerChange[5]); }
+    if (runningCustomerChange[4][1] != 0) { customerChange.push(runningCustomerChange[4]); }
+
+    if (runningCustomerChange[3][1] != 0) {
+        console.log(runningCustomerChange[3]);
+        customerChange.push(runningCustomerChange[3]);
+        console.log(customerChange);
+    }
+
+    if (runningCustomerChange[2][1] != 0) { customerChange.push(runningCustomerChange[2]); }
+    if (runningCustomerChange[1][1] != 0) { customerChange.push(runningCustomerChange[1]); }
+    if (runningCustomerChange[0][1] != 0) { customerChange.push(runningCustomerChange[8]); }
 };
 
 function checkCashRegister(price, cash, cid) {
@@ -107,7 +191,6 @@ function checkCashRegister(price, cash, cid) {
     console.log(cid);
     console.log('-------- CID copy --------');
     createCidCopy(cid);
-    // countCoinsOf(cidCopy);
     console.log(cidCopy);
     console.log('-------- change -------');
     console.log('refund amount: ' + refundAmount);
@@ -115,8 +198,9 @@ function checkCashRegister(price, cash, cid) {
     findChangeInCidCopyOf(refundAmount);
     console.log(runningCustomerChange);
 
-    // DISPLAY ANSWER!!!
+    addToCustomerChange(runningCustomerChange);
 
+    change.change = customerChange;
     console.log(change);
     return change;
 };
