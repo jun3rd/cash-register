@@ -9,12 +9,73 @@
 /* {status: "OPEN", change[...]} */
 
 let checkCashRegisterTEST = (price, cash, cid) => {
-    checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]); // should return an object.
-    checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]); // should return {status: "OPEN", change: [["QUARTER", 0.5]]}.
-    checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]); // should return {status: "OPEN", change: [["TWENTY", 60], ["TEN", 20], ["FIVE", 15], ["ONE", 1], ["QUARTER", 0.5], ["DIME", 0.2], ["PENNY", 0.04]]}.
-    checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]); // should return {status: "INSUFFICIENT_FUNDS", change: []}.
-    checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]); // should return {status: "INSUFFICIENT_FUNDS", change: []}.
-    checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]); // should return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]}.
+    checkCashRegister( 19.5, 20, [
+        ["PENNY", 1.01],
+        ["NICKEL", 2.05],
+        ["DIME", 3.1],
+        ["QUARTER", 4.25],
+        ["ONE", 90],
+        ["FIVE", 55],
+        ["TEN", 20],
+        ["TWENTY", 60],
+        ["ONE HUNDRED", 100]
+    ]); // should return an object.
+    checkCashRegister(19.5, 20, [
+        ["PENNY", 1.01],
+        ["NICKEL", 2.05],
+        ["DIME", 3.1],
+        ["QUARTER", 4.25],
+        ["ONE", 90],
+        ["FIVE", 55],
+        ["TEN", 20],
+        ["TWENTY", 60],
+        ["ONE HUNDRED", 100]
+    ]); // should return {status: "OPEN", change: [["QUARTER", 0.5]]}.
+    console.log('------------------- CURRENT --------------------');
+    checkCashRegister(3.26, 100, [
+        ["PENNY", 1.01],
+        ["NICKEL", 2.05],
+        ["DIME", 3.1],
+        ["QUARTER", 4.25],
+        ["ONE", 90],
+        ["FIVE", 55],
+        ["TEN", 20],
+        ["TWENTY", 60],
+        ["ONE HUNDRED", 100]
+    ]); // should return {status: "OPEN", change: [["TWENTY", 60], ["TEN", 20], ["FIVE", 15], ["ONE", 1], ["QUARTER", 0.5], ["DIME", 0.2], ["PENNY", 0.04]]}.
+    // checkCashRegister(19.5, 20, [
+    //     ["PENNY", 0.01],
+    //     ["NICKEL", 0],
+    //     ["DIME", 0],
+    //     ["QUARTER", 0],
+    //     ["ONE", 0],
+    //     ["FIVE", 0],
+    //     ["TEN", 0],
+    //     ["TWENTY", 0],
+    //     ["ONE HUNDRED", 0]
+    // ]); // should return {status: "INSUFFICIENT_FUNDS", change: []}.
+    // checkCashRegister(19.5, 20, [
+    //     ["PENNY", 0.01],
+    //     ["NICKEL", 0],
+    //     ["DIME", 0],
+    //     ["QUARTER", 0],
+    //     ["ONE", 1],
+    //     ["FIVE", 0],
+    //     ["TEN", 0],
+    //     ["TWENTY", 0],
+    //     ["ONE HUNDRED", 0]
+    // ]); // should return {status: "INSUFFICIENT_FUNDS", change: []}.
+    // checkCashRegister(19.5, 20, [
+    //     ["PENNY", 0.5],
+    //     ["NICKEL", 0],
+    //     ["DIME", 0],
+    //     ["QUARTER", 0],
+    //     ["ONE", 0],
+    //     ["FIVE", 0],
+    //     ["TEN", 0],
+    //     ["TWENTY", 0],
+    //     ["ONE HUNDRED", 0]
+    // ]); // should return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]}.
 }
 
 
@@ -61,38 +122,36 @@ let runningCustomerChange = [
     ["HUNDRED", 0]
 ];
 
-let createCidCopy = (cid) => {
-    cidCopy = JSON.parse(JSON.stringify(cid)); // "pure" deep copy of array
-};
-
-let removeHundredFromCidCopy = () => { cidCopy[8][1] -= 100; };
-let addHundredToCustomerChange = () => { runningCustomerChange[8][1] += 100; };
-
-let removeTwentyFromCidCopy = () => { cidCopy[7][1] -= 20; };
-let addTwentyToCustomerChange = () => { runningCustomerChange[7][1] += 20; };
-
-let removeTenFromCidCopy = () => { cidCopy[6][1] -= 10; };
-let addTenToCustomerChange = () => { runningCustomerChange[6][1] += 10; };
-
-let removeFiveFromCidCopy = () => { cidCopy[5][1] -= 5; };
-let addFiveToCustomerChange = () => { runningCustomerChange[5][1] += 5; };
-
-let removeOneFromCidCopy = () => { cidCopy[4][1] -= 1; };
-let addOneToCustomerChange = () => { runningCustomerChange[4][1] += 1; };
-
-let removeQuarterFromCidCopy = () => { cidCopy[3][1] -= 0.25; };
-let addQuarterToCustomerChange = () => { runningCustomerChange[3][1] += 0.25; };
-
-let removeDimeFromCidCopy = () => { cidCopy[2][1] -= 0.10; };
-let addDimeToCustomerChange = () => { runningCustomerChange[2][1] += 0.10; };
-
-let removeNickelFromCidCopy = () => { cidCopy[1][1] -= 0.05; };
-let addNickelToCustomerChange = () => { runningCustomerChange[1][1] += 0.05; };
+let createCidCopyFrom = (cid) => { cidCopy = JSON.parse(JSON.stringify(cid)); }; // "pure" deep copy of array
 
 let removePennyFromCidCopy = () => { cidCopy[0][1] -= 0.01; };
 let addPennyToCustomerChange = () => { runningCustomerChange[0][1] += 0.01; };
 
-let findChangeInCidCopyOf = (refundAmount) => {
+let removeNickelFromCidCopy = () => { cidCopy[1][1] -= 0.05; };
+let addNickelToCustomerChange = () => { runningCustomerChange[1][1] += 0.05; };
+
+let removeDimeFromCidCopy = () => { cidCopy[2][1] -= 0.10; };
+let addDimeToCustomerChange = () => { runningCustomerChange[2][1] += 0.10; };
+
+let removeQuarterFromCidCopy = () => { cidCopy[3][1] -= 0.25; };
+let addQuarterToCustomerChange = () => { runningCustomerChange[3][1] += 0.25; };
+
+let removeOneFromCidCopy = () => { cidCopy[4][1] -= 1; };
+let addOneToCustomerChange = () => { runningCustomerChange[4][1] += 1; };
+
+let removeFiveFromCidCopy = () => { cidCopy[5][1] -= 5; };
+let addFiveToCustomerChange = () => { runningCustomerChange[5][1] += 5; };
+
+let removeTenFromCidCopy = () => { cidCopy[6][1] -= 10; };
+let addTenToCustomerChange = () => { runningCustomerChange[6][1] += 10; };
+
+let removeTwentyFromCidCopy = () => { cidCopy[7][1] -= 20; };
+let addTwentyToCustomerChange = () => { runningCustomerChange[7][1] += 20; };
+
+let removeHundredFromCidCopy = () => { cidCopy[8][1] -= 100; };
+let addHundredToCustomerChange = () => { runningCustomerChange[8][1] += 100; };
+
+let searchCidCopyFor = (refundAmount) => {
     let penny = 0.01,
         nickel = 0.05,
         dime = 0.10,
@@ -109,99 +168,93 @@ let findChangeInCidCopyOf = (refundAmount) => {
             removeHundredFromCidCopy();
             addHundredToCustomerChange();
             currentRefundAmount = currentRefundAmount - 100;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= twenty) && (currentRefundAmount < hundred) ) {
             removeTwentyFromCidCopy();
             addTwentyToCustomerChange();
             currentRefundAmount = currentRefundAmount - 25;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= ten) && (currentRefundAmount < twenty) ) {
             removeTenFromCidCopy();
             addTenToCustomerChange();
             currentRefundAmount = currentRefundAmount - 10;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= five) && (currentRefundAmount < ten) ) {
             removeFiveFromCidCopy();
             addFiveToCustomerChange();
             currentRefundAmount = currentRefundAmount - 5;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= one) && (currentRefundAmount < five) ) {
             removeOneFromCidCopy();
             addOneToCustomerChange();
             currentRefundAmount = currentRefundAmount - 1;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= quarter) && (currentRefundAmount < one) ) {
             removeQuarterFromCidCopy();
             addQuarterToCustomerChange();
             currentRefundAmount = currentRefundAmount - 0.25;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= dime) && (currentRefundAmount < quarter) ) {
             removeDimeFromCidCopy();
             addDimeToCustomerChange();
             currentRefundAmount = currentRefundAmount - 0.10;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= nickel) && (currentRefundAmount < dime ) ) {
             removeNickelFromCidCopy();
             addNickelToCustomerChange();
             currentRefundAmount = currentRefundAmount - 0.05;
-            console.log('still owe: ' + currentRefundAmount);
         }
         if ( (currentRefundAmount >= penny) && (currentRefundAmount < nickel ) ) {
             removePennyFromCidCopy();
             addPennyToCustomerChange();
             currentRefundAmount = currentRefundAmount - 0.01;
-            console.log('still owe: ' + currentRefundAmount);
         }
     }
 };
 
 let addToCustomerChange = (runningCustomerChange) => {
-    if (runningCustomerChange[8][1] != 0) { customerChange.push(runningCustomerChange[8]); }
-    if (runningCustomerChange[7][1] != 0) { customerChange.push(runningCustomerChange[7]); }
-    if (runningCustomerChange[6][1] != 0) { customerChange.push(runningCustomerChange[6]); }
-    if (runningCustomerChange[5][1] != 0) { customerChange.push(runningCustomerChange[5]); }
-    if (runningCustomerChange[4][1] != 0) { customerChange.push(runningCustomerChange[4]); }
+    let status = "closed";
+    if (runningCustomerChange[8][1] != 0) { customerChange.push(runningCustomerChange[8]); status = "open"; }
+    if (runningCustomerChange[7][1] != 0) { customerChange.push(runningCustomerChange[7]); status = "open"; }
+    if (runningCustomerChange[6][1] != 0) { customerChange.push(runningCustomerChange[6]); status = "open"; }
+    if (runningCustomerChange[5][1] != 0) { customerChange.push(runningCustomerChange[5]); status = "open"; }
+    if (runningCustomerChange[4][1] != 0) { customerChange.push(runningCustomerChange[4]); status = "open"; }
+    if (runningCustomerChange[3][1] != 0) { console.log(runningCustomerChange[3]); customerChange.push(runningCustomerChange[3]); status = "open"; }
+    if (runningCustomerChange[2][1] != 0) { customerChange.push(runningCustomerChange[2]); status = "open"; }
+    if (runningCustomerChange[1][1] != 0) { customerChange.push(runningCustomerChange[1]); status = "open"; }
+    if (runningCustomerChange[0][1] != 0) { customerChange.push(runningCustomerChange[0]); status = "open"; }
+    return status;
+};
 
-    if (runningCustomerChange[3][1] != 0) {
-        console.log(runningCustomerChange[3]);
-        customerChange.push(runningCustomerChange[3]);
-        console.log(customerChange);
-    }
-
-    if (runningCustomerChange[2][1] != 0) { customerChange.push(runningCustomerChange[2]); }
-    if (runningCustomerChange[1][1] != 0) { customerChange.push(runningCustomerChange[1]); }
-    if (runningCustomerChange[0][1] != 0) { customerChange.push(runningCustomerChange[8]); }
+let clearAll = () => {
+    cidCopy = [];
+    customerChange = [];
+    runningCustomerChange = [
+        ["PENNY", 0],
+        ["NICKEL", 0],
+        ["DIME", 0],
+        ["QUARTER", 0],
+        ["ONE", 0],
+        ["FIVE", 0],
+        ["TEN", 0],
+        ["TWENTY", 0],
+        ["HUNDRED", 0]
+    ];
 };
 
 function checkCashRegister(price, cash, cid) {
     var change = {
         status: "closed",
-        change: {}
+        change: []
     };
     let refundAmount = cash - price;
 
-    console.log('-------- CID --------');
-    console.log(cid);
-    console.log('-------- CID copy --------');
-    createCidCopy(cid);
-    console.log(cidCopy);
-    console.log('-------- change -------');
-    console.log('refund amount: ' + refundAmount);
-
-    findChangeInCidCopyOf(refundAmount);
-    console.log(runningCustomerChange);
-
-    addToCustomerChange(runningCustomerChange);
-
+    createCidCopyFrom(cid);
+    searchCidCopyFor(refundAmount);
+    change.status = addToCustomerChange(runningCustomerChange);
     change.change = customerChange;
     console.log(change);
+    clearAll();
     return change;
 };
 
@@ -210,3 +263,4 @@ function checkCashRegister(price, cash, cid) {
 checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
 // END: submission to FreeCodeCamp
 
+checkCashRegisterTEST();
