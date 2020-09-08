@@ -152,7 +152,8 @@ let removeHundredFromCidCopy = () => { cidCopy[8][1] -= 100; };
 let addHundredToCustomerChange = () => { runningCustomerChange[8][1] += 100; };
 
 let searchCidCopyFor = (refundAmount) => {
-    let penny = 0.01,
+    let zero = 0.00,
+        penny = 0.01,
         nickel = 0.05,
         dime = 0.10,
         quarter = 0.25,
@@ -162,52 +163,61 @@ let searchCidCopyFor = (refundAmount) => {
         twenty = 20,
         hundred = 100;
     let currentRefundAmount = refundAmount;
+    let counter20 = 0;
+    let maxLoopsInCents = refundAmount * 100;
 
-    while (currentRefundAmount > 0) {
+    // LOOP is NEVER infinite because there's ALWAYS a maximum number of pennies to loop and reduce the money owed.
+
+    console.log('refund to customer: ' + refundAmount);
+    // while (currentRefundAmount >= 0) {
+    for (let x = maxLoopsInCents; x>=-1; x-=1) {
         if ( (currentRefundAmount >= hundred) ) {
             removeHundredFromCidCopy();
             addHundredToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 100;
+            currentRefundAmount = currentRefundAmount - hundred;
         }
         if ( (currentRefundAmount >= twenty) && (currentRefundAmount < hundred) ) {
             removeTwentyFromCidCopy();
             addTwentyToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 25;
+            currentRefundAmount = currentRefundAmount - twenty; counter20++; console.log('counter20: ' + counter20);
         }
         if ( (currentRefundAmount >= ten) && (currentRefundAmount < twenty) ) {
             removeTenFromCidCopy();
             addTenToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 10;
+            currentRefundAmount = currentRefundAmount - ten;
         }
         if ( (currentRefundAmount >= five) && (currentRefundAmount < ten) ) {
             removeFiveFromCidCopy();
             addFiveToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 5;
+            currentRefundAmount = currentRefundAmount - five;
         }
         if ( (currentRefundAmount >= one) && (currentRefundAmount < five) ) {
             removeOneFromCidCopy();
             addOneToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 1;
+            currentRefundAmount = currentRefundAmount - one;
         }
         if ( (currentRefundAmount >= quarter) && (currentRefundAmount < one) ) {
             removeQuarterFromCidCopy();
             addQuarterToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 0.25;
+            currentRefundAmount = currentRefundAmount - quarter;
         }
         if ( (currentRefundAmount >= dime) && (currentRefundAmount < quarter) ) {
             removeDimeFromCidCopy();
             addDimeToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 0.10;
+            currentRefundAmount = currentRefundAmount - dime;
         }
         if ( (currentRefundAmount >= nickel) && (currentRefundAmount < dime ) ) {
             removeNickelFromCidCopy();
             addNickelToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 0.05;
+            currentRefundAmount = currentRefundAmount - nickel;
         }
-        if ( (currentRefundAmount >= penny) && (currentRefundAmount < nickel ) ) {
+        if ( (currentRefundAmount >= zero) && (currentRefundAmount < nickel ) ) {
             removePennyFromCidCopy();
             addPennyToCustomerChange();
-            currentRefundAmount = currentRefundAmount - 0.01;
+            currentRefundAmount = currentRefundAmount - penny;
+        }
+        if (currentRefundAmount == 0) {
+            console.log("out of money!!!");
         }
     }
 };
@@ -249,6 +259,10 @@ function checkCashRegister(price, cash, cid) {
     };
     let refundAmount = cash - price;
 
+    console.log('customer cash: ' + cash);
+    console.log('price of item(s): ' + price);
+    console.log('refund total: ' + refundAmount);
+    console.log('------------------------------');
     createCidCopyFrom(cid);
     searchCidCopyFor(refundAmount);
     change.status = addToCustomerChange(runningCustomerChange);
