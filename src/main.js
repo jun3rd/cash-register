@@ -9,18 +9,18 @@
 /* {status: "OPEN", change[...]} */
 
 let checkCashRegisterTEST = (price, cash, cid) => {
-    checkCashRegister( 19.5, 20, [ ["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]
-    ]); // should return an object.
-    checkCashRegister(19.5, 20, [ ["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]
-    ]); // should return {status: "OPEN", change: [["QUARTER", 0.5]]}.
-    checkCashRegister(3.26, 100, [ ["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]
-    ]); // should return {status: "OPEN", change: [["TWENTY", 60], ["TEN", 20], ["FIVE", 15], ["ONE", 1], ["QUARTER", 0.5], ["DIME", 0.2], ["PENNY", 0.04]]}.
+    // checkCashRegister( 19.5, 20, [ ["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]
+    // ]); // should return an object.
+    // checkCashRegister(19.5, 20, [ ["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]
+    // ]); // should return {status: "OPEN", change: [["QUARTER", 0.5]]}.
+    // checkCashRegister(3.26, 100, [ ["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]
+    // ]); // should return {status: "OPEN", change: [["TWENTY", 60], ["TEN", 20], ["FIVE", 15], ["ONE", 1], ["QUARTER", 0.5], ["DIME", 0.2], ["PENNY", 0.04]]}.
     // checkCashRegister(19.5, 20, [ ["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]
     // ]); // should return {status: "INSUFFICIENT_FUNDS", change: []}.
     // checkCashRegister(19.5, 20, [ ["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]
     // ]); // should return {status: "INSUFFICIENT_FUNDS", change: []}.
-    // checkCashRegister(19.5, 20, [ ["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]
-    // ]); // should return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]}.
+    checkCashRegister(19.5, 20, [ ["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]
+    ]); // should return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]}.
 };
 
 // NOTE: enumerate (count) number of pennies, nickels, dimes, quarters .... so you know how much change to give back!!!
@@ -52,10 +52,12 @@ let checkCashRegisterTEST = (price, cash, cid) => {
 // -=USE ABOVE ONLY=- : if you need coin counts
 
 // START: submission to FreeCodeCamp
+let changeCopy = { status: "", change: [] };
 let cidCopy = [];
 let customerChange = [];
 let runningCustomerChange = [ ["PENNY", 0], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["HUNDRED", 0] ];
 let empty = 0.00, penny = 0.01, nickel = 0.05, dime = 0.10, quarter = 0.25, one = 1.00, five = 5.00, ten = 10.00, twenty = 20.00, hundred = 100.00;
+let insufficient = false;
 
 let createCidCopyFrom = (cid) => { cidCopy = JSON.parse(JSON.stringify(cid)); }; // "pure" deep copy of array
 
@@ -248,8 +250,8 @@ let searchCidCopyFor = (refundAmount) => {
         if ( (currentRefundAmount >= penny) && ((cidCopy[1][1] <= 0) && (cidCopy[0][1] > 0)) ) {
             console.log('======== REMOVE $0.01 -- BECAUSE NO $0.05 ========');
             console.log('CID-Copy: $' + cidCopy[0][1] + ', owe customer : $' + currentRefundAmount);
-            removeNickelFromCidCopy(penny);
-            addNickelToCustomerChange(penny);
+            removePennyFromCidCopy(penny);
+            addPennyToCustomerChange(penny);
             currentRefundAmount = currentRefundAmount - penny;
             console.log('remove from CID-Copy: $' + penny + ', balance of CID-Copy: $' + cidCopy[0][1] + ', still owe customer: $' + currentRefundAmount);
         }
@@ -271,40 +273,52 @@ let searchCidCopyFor = (refundAmount) => {
             currentRefundAmount = 0;
             console.log('remove from CID-Copy: $' + penny + ', balance of CID-Copy: $' + cidCopy[0][1] + ', still owe customer: $' + currentRefundAmount);
             console.log('---- LAST PENNY -----');
+            if(cidCopy[0][1] !== 0) {
+                cidCopy[0][1] === 0;
+            }
+            console.log(cidCopy[0][1]);
             break;
         }
 //END---------------------------------------------------------------------------------------
 // ============ NOTE: beware of values where you owe more than 1-penny and there's nothing left in the drawer.
+
+        if ( (currentRefundAmount > 0) && ((cidCopy[0][1] <= 0) && (cidCopy[1][1] <= 0) && (cidCopy[2][1] <=0)) ) {
+            console.log("INSUFFICIENT FUNDS!!!");
+            console.log('----------------------- really inside IF -------------');
+            changeCopy.status = "INSUFFICIENT FUNDS";
+            insufficient = true;
+            customerChange.length = 0;
+            changeCopy.change.length = 0;
+            console.log(changeCopy);
+            break;
+        }
 
 
         if (currentRefundAmount <= empty) {
             console.log("REFUND complete!!!");
             break;
         }
+
     }
 };
 
 let addToCustomerChange = (runningCustomerChange) => {
-    let status = "closed";
-    if (runningCustomerChange[8][1] != 0) { customerChange.push(runningCustomerChange[8]); status = "open"; }
-    if (runningCustomerChange[7][1] != 0) { customerChange.push(runningCustomerChange[7]); status = "open"; }
-    if (runningCustomerChange[6][1] != 0) { customerChange.push(runningCustomerChange[6]); status = "open"; }
-    if (runningCustomerChange[5][1] != 0) { customerChange.push(runningCustomerChange[5]); status = "open"; }
-    if (runningCustomerChange[4][1] != 0) { customerChange.push(runningCustomerChange[4]); status = "open"; }
-    if (runningCustomerChange[3][1] != 0) { customerChange.push(runningCustomerChange[3]); status = "open"; }
-    if (runningCustomerChange[2][1] != 0) { customerChange.push(runningCustomerChange[2]); status = "open"; }
-    if (runningCustomerChange[1][1] != 0) { customerChange.push(runningCustomerChange[1]); status = "open"; }
-    if (runningCustomerChange[0][1] != 0) { customerChange.push(runningCustomerChange[0]); status = "open"; }
-    return status;
+    if (runningCustomerChange[8][1] != 0) { customerChange.push(runningCustomerChange[8]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[7][1] != 0) { customerChange.push(runningCustomerChange[7]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[6][1] != 0) { customerChange.push(runningCustomerChange[6]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[5][1] != 0) { customerChange.push(runningCustomerChange[5]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[4][1] != 0) { customerChange.push(runningCustomerChange[4]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[3][1] != 0) { customerChange.push(runningCustomerChange[3]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[2][1] != 0) { customerChange.push(runningCustomerChange[2]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[1][1] != 0) { customerChange.push(runningCustomerChange[1]); changeCopy.status = "OPEN"; }
+    if (runningCustomerChange[0][1] != 0) { customerChange.push(runningCustomerChange[0]); changeCopy.status = "OPEN"; }
 };
 
 let clearAll = () => {
     cidCopy = [];
     customerChange = [];
-    runningCustomerChange = [
-        ["PENNY", 0], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0],
-        ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["HUNDRED", 0]
-    ];
+    runningCustomerChange = [ ["PENNY", 0], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["HUNDRED", 0] ];
+    insufficient = false;
 };
 
 function checkCashRegister(price, cash, cid) {
@@ -314,6 +328,7 @@ function checkCashRegister(price, cash, cid) {
     };
     let refundAmount = cash - price;
 
+    console.log('-=-=-=-=-=-=-=-=-=-=-=-=    N E W   S E A R C H    =-=-=-=-=-=-=-=-=-=-=-=-');
     console.log('CUSTOMER CASH: ' + cash);
     console.log('PRICE OF ITEM(s): ' + price);
     console.log('REFUND TOTAL: ' + refundAmount);
@@ -325,16 +340,47 @@ function checkCashRegister(price, cash, cid) {
     console.log('REFUND AMOUNT');
     searchCidCopyFor(refundAmount);
     console.log('------------------------------');
-    change.status = addToCustomerChange(runningCustomerChange);
-    change.change = customerChange;
+    console.log('add (running customer change) to customer change');
+    addToCustomerChange(runningCustomerChange);
+    console.log('customer change');
+    console.log(customerChange);
+    change.status = changeCopy.status;
+    changeCopy.change = customerChange;
+    if (insufficient == true) {
+        change.status = "INSUFFICIENT FUNDS!!!";
+        change.change.length = 0;
+    }
+    console.log('------------------------------');
+    console.log('changeCopy');
+    console.log(changeCopy);
+    change.change = changeCopy.change;
+    console.log('------------------------------');
+    if (insufficient == true) {
+        change.status = "INSUFFICIENT FUNDS!!!";
+        change.change.length = 0;
+    }
+    console.log(cidCopy);
+
+    if ( (cidCopy[8][1] <=0) &&
+        (cidCopy[7][1] <=0) &&
+        (cidCopy[6][1] <=0) &&
+        (cidCopy[5][1] <=0) &&
+        (cidCopy[4][1] <=0) &&
+        (cidCopy[3][1] <=0) &&
+        (cidCopy[2][1] <=0) &&
+        (cidCopy[1][1] <=0) &&
+        (cidCopy[0][1] <=0) ) {
+        change.status = "CLOSED";
+    }
+    console.log('change:');
     console.log(change);
     console.log('------------------------------');
-    console.log('clear all')
+    console.log('clear all');
     clearAll();
     return change;
 };
 
-checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
+// checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
 // END: submission to FreeCodeCamp
 
 // NOTE: place all helper (anonymous arrow functions inside 'main' function)
