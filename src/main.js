@@ -122,6 +122,7 @@ let searchCidCopyFor = (refundAmount) => {
         }
 
 //START---------------------------------------------------------------------------------------
+        // NAME OF FUNCTION GOES HERE!!!
         console.log('!!! -- current refund amount: ' + currentRefundAmount);
         // no twenties and HAVE tens
         if ( (currentRefundAmount >= ten) && ((cidCopy[7][1] <= 0) && (cidCopy[6][1] > 0)) ) {
